@@ -53,10 +53,7 @@ License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
             </field>
 
             <field name="barcode" position="replace">
-                <label
-                    for="barcode"
-                    groups="barcodes_generator_abstract.generate_barcode"
-                />
+                <label for="barcode" />
                 <div name="div_barcode" class="o_row">
                     <field
                         name="barcode"
