@@ -41,20 +41,6 @@ class ProductTemplate(models.Model):
     def onchange_barcode_rule_id(self):
         self.generate_type = self.barcode_rule_id.generate_type
 
-    # Overload Section
-    @api.model_create_multi
-    def create(self, vals_list):
-        # this is needed to set given values to first variant after creation
-        # these fields should be moved to product as lead to confusion
-        # (Ref. product module feature in Odoo Core)
-        result = self
-        for vals in vals_list:
-            template = super().create(vals)
-            related_vals = {}
-            for field in ["barcode_rule_id", "barcode_base"]:
-                if vals.get(field, False):
-                    related_vals[field] = vals[field]
-            if related_vals:
-                template.write(related_vals)
-            result |= template
-        return result
+    def _get_related_fields_variant_template(self):
+        res = super()._get_related_fields_variant_template()
+        return res + ["barcode_rule_id", "barcode_base"]
