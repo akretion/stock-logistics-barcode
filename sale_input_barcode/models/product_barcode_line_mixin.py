@@ -23,10 +23,8 @@ class ProductLineMixin(models.AbstractModel):
         res = self.env["gs1_barcode"].decode(barcode)
         if not res.get("01"):
             raise UserError(
-                _(
-                    "Decoded barcode %s doesn't include a valid segment for GTIN"
-                    % barcode
-                )
+                _("Decoded barcode %s doesn't include a valid segment for GTIN")
+                % barcode
             )
         product = self.env["product.product"].search([("barcode", "=", res["01"])])
         if product:
@@ -35,11 +33,11 @@ class ProductLineMixin(models.AbstractModel):
                     _(
                         "These products %s share the same barcode.\n"
                         "Impossible to guess which one to choose."
-                        % [(x.display_name for x in product)]
                     )
+                    % [(x.display_name for x in product)]
                 )
         else:
-            raise UserError(_("No product found matching this barcode %s" % barcode))
+            raise UserError(_("No product found matching this barcode %s") % barcode)
         vals = {"product_id": product.id}
         if res.get("10") and "lot_id" in self._fields:
             # some module may add `lot_id` field
@@ -52,9 +50,12 @@ class ProductLineMixin(models.AbstractModel):
             if lot:
                 # _create_unknown_lot may be overriden to not return lot
                 vals["lot_id"] = lot.id
-        if "order_id" in self._fields:
-            vals["order_id"] = self.env.context.get("order_id")
-        self.create(vals)
+        self.create(self._prepare_sale_line_vals_from_barcode(vals))
+
+    def _prepare_sale_line_vals_from_barcode(self, vals):
+        if "order_id" in self._fields and self.env.context.get("order_id"):
+            vals["order_id"] = self.env.context["order_id"]
+        return vals
 
     def _create_unknown_lot(self, barcode, barcode_infos, product):
         """Inherit to implement your own scenario creation
