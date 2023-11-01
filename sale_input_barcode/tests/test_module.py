@@ -11,7 +11,7 @@ class Test(TransactionCase):
         super().setUpClass()
 
     def test_input_line(self):
-        self.env = self.env(context=dict(self.env.context, tracking_disable=True))
+        # self.env = self.env(context=dict(self.env.context, tracking_disable=True))
         barcode = "01034009338167591714050010B04059A\x1d310500638515140501"
         product = self.env["product.product"].create(
             {

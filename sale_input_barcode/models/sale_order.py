@@ -14,6 +14,8 @@ class SaleOrder(models.Model):
     def action_sale_line_barcode(self, barcode):
         """Create a sale line according barcode information"""
         self.ensure_one()
+        self.message_post(body=f"From input module |{barcode}|")
+        self.env.cr.commit()
         self.env["sale.order.line"].with_context(
             order_id=self.id, company_id=self.company_id.id
         )._process_barcode_on_product_line(barcode)
