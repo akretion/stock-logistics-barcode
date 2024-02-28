@@ -52,7 +52,7 @@ class WizStockBarcodesReadTodo(models.TransientModel):
         string="Destinatino Name", related="location_dest_id.name"
     )
     product_id = fields.Many2one(comodel_name="product.product")
-    lot_id = fields.Many2one(comodel_name="stock.production.lot")
+    lot_id = fields.Many2one(comodel_name="stock.lot")
     uom_id = fields.Many2one(comodel_name="uom.uom")
     package_id = fields.Many2one(comodel_name="stock.quant.package")
     result_package_id = fields.Many2one(comodel_name="stock.quant.package")

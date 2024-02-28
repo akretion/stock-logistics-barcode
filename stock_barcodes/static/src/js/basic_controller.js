@@ -229,6 +229,8 @@ odoo.define("stock_barcodes.BasicController", function (require) {
         },
 
         /**
+         * _onDocumentKeyDown event handler
+         *
          * @private
          * @param {KeyboardEvent} ev
          */
@@ -271,7 +273,7 @@ odoo.define("stock_barcodes.BasicController", function (require) {
                     self.$("button[name='action_clean_values']").click();
                 } else if (ev.keyCode === 123 || ev.keyCode === 115) {
                     // F12  or F4
-                    return self.open_action_menu();
+                    self.open_action_menu();
                     // Self.$("button[name='open_actions']").click();
                 } else if (ev.keyCode === $.ui.keyCode.UP) {
                     // Search kanban buttons to navigate

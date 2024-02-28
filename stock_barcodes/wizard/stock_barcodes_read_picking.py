@@ -111,7 +111,7 @@ class WizStockBarcodesReadPicking(models.TransientModel):
         if picking_id:
             self._set_candidate_pickings(self.env["stock.picking"].browse(picking_id))
 
-    @api.model
+    @api.model_create_multi
     def create(self, vals):
         # When user click any view button the wizard record is create and the
         # picking candidates have been lost, so we need set it.
@@ -227,7 +227,7 @@ class WizStockBarcodesReadPicking(models.TransientModel):
         else:
             self.lot_id = False
         if self.option_group_id.get_option_value("product_qty", "filled_default"):
-            self.product_qty = move_line.product_uom_qty - move_line.qty_done
+            self.product_qty = move_line.reserved_uom_qty - move_line.qty_done
         else:
             if not self.visible_force_done:
                 self.product_qty = 0.0
@@ -463,7 +463,7 @@ class WizStockBarcodesReadPicking(models.TransientModel):
             lines = candidate_lines.filtered(
                 lambda ln: (
                     ln.lot_id == self.lot_id
-                    and ln.product_uom_qty == 0.0
+                    and ln.reserved_uom_qty == 0.0
                     and ln.qty_done > 0.0
                 )
             )
@@ -490,9 +490,9 @@ class WizStockBarcodesReadPicking(models.TransientModel):
             return False
         move_lines_dic = {}
         for line in lines:
-            if line.product_uom_qty and len(lines) > 1:
+            if line.reserved_uom_qty and len(lines) > 1:
                 assigned_qty = min(
-                    max(line.product_uom_qty - line.qty_done, 0.0), available_qty
+                    max(line.reserved_uom_qty - line.qty_done, 0.0), available_qty
                 )
             else:
                 assigned_qty = available_qty
@@ -514,7 +514,7 @@ class WizStockBarcodesReadPicking(models.TransientModel):
             elif line.result_package_id == line.package_id:
                 sml_vals.update({"result_package_id": False})
             self._update_stock_move_line(line, sml_vals)
-            if line.qty_done >= line.product_uom_qty:
+            if line.qty_done >= line.reserved_uom_qty:
                 line.barcode_scan_state = "done"
             elif self.env.context.get("done_forced"):
                 line.barcode_scan_state = "done_forced"
@@ -538,6 +538,7 @@ class WizStockBarcodesReadPicking(models.TransientModel):
         ):
             # Create an extra stock move line if this product has an
             # initial demand.
+            # breakpoint()
             stock_move_lines = self.create_new_stock_move_line(
                 moves_todo, available_qty
             )

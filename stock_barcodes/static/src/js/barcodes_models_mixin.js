@@ -22,6 +22,7 @@ odoo.define("stock_barcodes.BarcodesModelsMixin", function (require) {
         /**
          * Helper to know if the given model is allowed
          *
+         * @param {String} model_name
          * @private
          * @returns {Boolean}
          */

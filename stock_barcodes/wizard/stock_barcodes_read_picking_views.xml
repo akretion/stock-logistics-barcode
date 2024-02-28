@@ -185,6 +185,7 @@
                                 type="object"
                                 class="btn"
                                 icon="fa-upload"
+                                title="Fill from pending line"
                                 context="{'wiz_barcode_id': parent.id}"
                             />
                         </tree>
@@ -291,6 +292,7 @@
                                 type="object"
                                 class="btn"
                                 icon="fa-trash"
+                                title="Remove detailed operation"
                                 context="{'wiz_barcode_id': parent.id}"
                             />
                         </tree>
