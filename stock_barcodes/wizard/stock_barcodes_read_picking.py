@@ -768,9 +768,9 @@ class WizCandidatePicking(models.TransientModel):
             qty_demand = 0
             qty_done = 0
             candidate.product_qty_reserved = sum(
-                candidate.picking_id.mapped("move_lines.reserved_availability")
+                candidate.picking_id.mapped("move_ids.reserved_availability")
             )
-            for move in candidate.picking_id.move_lines:
+            for move in candidate.picking_id.move_ids:
                 qty_reserved += move.reserved_availability
                 qty_demand += move.product_uom_qty
                 qty_done += move.quantity_done
