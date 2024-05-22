@@ -193,7 +193,7 @@ class WizStockBarcodesRead(models.AbstractModel):
         if location:
             self.location_dest_id = location
             if (
-                self.picking_id.picking_type_id.barcode_option_group_id.forbid_same_source_and_dest
+                self.picking_id.picking_type_id.barcode_option_group_id.update_all_dest_on_dest_update
             ):
                 for sml in self.move_line_ids:
                     sml.location_dest_id = location
