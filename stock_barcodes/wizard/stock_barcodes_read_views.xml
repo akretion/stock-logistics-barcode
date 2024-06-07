@@ -437,7 +437,7 @@
                             <a
                                 role="button"
                                 class="btn btn-secondary dropdown-toggle d-lg-none"
-                                data-toggle="dropdown"
+                                data-bs-toggle="dropdown"
                                 aria-haspopup="true"
                                 aria-expanded="false"
                                 title="Options"
@@ -445,11 +445,11 @@
                               <i class="fa fa-cogs" />
                             </a>
                             <div
-                                class="dropdown-menu pl-2 pr-2 d-lg-flex-no-dropdown"
+                                class="dropdown-menu"
                                 role="menu"
                                 style="min-width: 200px"
                             >
-                                <div name="manual_entry" class="d-flex">
+                                <div name="manual_entry">
                                     <field
                                         name="manual_entry"
                                         widget="barcode_boolean_toggle"

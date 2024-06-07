@@ -192,9 +192,8 @@ class WizStockBarcodesRead(models.AbstractModel):
         location = self.env["stock.location"].search(self._barcode_domain(self.barcode))
         if location:
             self.location_dest_id = location
-            if (
-                self.picking_id.picking_type_id.barcode_option_group_id.update_all_dest_on_dest_update
-            ):
+            option_group = self.picking_id.picking_type_id.barcode_option_group_id
+            if option_group.update_all_dest_on_dest_update:
                 for sml in self.move_line_ids:
                     sml.location_dest_id = location
             return True
