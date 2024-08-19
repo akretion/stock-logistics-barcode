@@ -111,7 +111,7 @@ class WizStockBarcodesReadTodo(models.TransientModel):
         else:
             vals.update(
                 {
-                    "product_uom_qty": line.move_id.product_uom_qty,
+                    "product_uom_qty": line.product_uom_qty,
                     "location_id": (line.move_line_ids[:1] or line).location_id.id,
                     "location_dest_id": (
                         line.move_line_ids[:1] or line
