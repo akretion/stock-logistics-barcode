@@ -50,6 +50,7 @@
                             <field name="create_lot" />
                             <field name="use_location_dest_putaway" />
                             <field name="scan_product_one_by_one" />
+                            <field name="scan_whole_source_package" />
                             <field name="do_not_check_demand" />
                         </group>
                     </group>

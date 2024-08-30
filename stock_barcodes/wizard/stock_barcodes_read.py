@@ -299,7 +299,7 @@ class WizStockBarcodesRead(models.AbstractModel):
             ("package_id.name", "=", self.barcode),
             ("quantity", ">", 0.0),
         ]
-        if self.option_group_id.get_option_value("location_id", "forced"):
+        if self.option_group_id.get_option_value("location_id", "forced") or self.option_group_id.scan_whole_source_package:
             quant_domain.append(("location_id", "=", self.location_id.id))
         if self.owner_id:
             quant_domain.append(("owner_id", "=", self.owner_id.id))
@@ -313,7 +313,16 @@ class WizStockBarcodesRead(models.AbstractModel):
         else:
             # self._set_messagge_info("more_match", _("Package not fount or empty"))
             return False
-        self.set_info_from_quants(quants)
+        if self.option_group_id.scan_whole_source_package:
+            for q in quants:
+                self.set_info_from_quants(q)
+                self.with_context(skip_clean_values=True).action_done()
+            self.action_clean_values()
+            self.determine_todo_action()
+            self.action_show_step()
+            return "no_confirm"
+        else:
+            self.set_info_from_quants(quants)
         return True
 
     def process_barcode_result_package_id(self):
@@ -362,6 +371,7 @@ class WizStockBarcodesRead(models.AbstractModel):
             products = quants.mapped("product_id")
             if len(products) == 1:
                 self.action_product_scaned_post(products[0])
+
             package = quants[0].package_id
             if not quants.filtered(lambda q: q.package_id != package):
                 self.package_id = package
@@ -410,6 +420,8 @@ class WizStockBarcodesRead(models.AbstractModel):
                     self.play_sounds(res)
                 if res:
                     barcode_found = True
+                    if res == "no_confirm":
+                        return True
                     break
                 elif self.message_type != "success":
                     return False
@@ -500,11 +512,11 @@ class WizStockBarcodesRead(models.AbstractModel):
         result_ok = self.check_location_contidion()
         if not result_ok:
             return False
-        if not self.product_id:
+        if not self.product_id and not self.package_id:
             self._set_messagge_info("info", _("Waiting product"))
             return False
         result_ok = self.check_lot_contidion()
-        if not result_ok:
+        if not result_ok and self.product_id:
             return False
         if (
             not self.product_qty

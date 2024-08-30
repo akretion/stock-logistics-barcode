@@ -107,6 +107,10 @@ class StockBarcodesOptionGroup(models.Model):
         help="Will set the product quantity to one and complete the line",
         string="Scan product one by one",
     )
+    scan_whole_source_package = fields.Boolean(
+        help="On package scan and add all product from the package in the move lines to process",
+        string="Scan whole source package",
+    )
     forbid_same_source_and_dest = fields.Boolean(
         help="Won't allow picking validation if source and dest is the same",
         string="Forbid same source and dest",
