@@ -299,7 +299,10 @@ class WizStockBarcodesRead(models.AbstractModel):
             ("package_id.name", "=", self.barcode),
             ("quantity", ">", 0.0),
         ]
-        if self.option_group_id.get_option_value("location_id", "forced") or self.option_group_id.scan_whole_source_package:
+        if (
+            self.option_group_id.get_option_value("location_id", "forced")
+            or self.option_group_id.scan_whole_source_package
+        ):
             quant_domain.append(("location_id", "=", self.location_id.id))
         if self.owner_id:
             quant_domain.append(("owner_id", "=", self.owner_id.id))
