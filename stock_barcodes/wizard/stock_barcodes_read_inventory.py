@@ -14,12 +14,12 @@ class WizStockBarcodesReadInventory(models.TransientModel):
     inventory_product_qty = fields.Float(
         string="Inventory quantities", digits="Product Unit of Measure", readonly=True
     )
-    inventory_quant_ids = fields.Many2many(
+    inventory_quant_ids = fields.One2many(
         comodel_name="stock.quant", compute="_compute_inventory_quant_ids"
     )
     display_read_quant = fields.Boolean(string="Read items")
 
-    @api.depends("display_read_quant")
+    @api.depends("display_read_quant", "_barcode_scanned")
     def _compute_inventory_quant_ids(self):
         for wiz in self:
             domain = [
