@@ -238,12 +238,16 @@ class WizStockBarcodesRead(models.AbstractModel):
             return True
         return False
 
+    def _get_lot_from_barcode(self):
+        lot_domain = [("name", "=", self.barcode)]
+        if self.product_id:
+            lot_domain.append(("product_id", "=", self.product_id.id))
+        lot = self.env["stock.lot"].search(lot_domain)
+        return lot
+
     def process_barcode_lot_id(self):
         if self.env.user.has_group("stock.group_production_lot"):
-            lot_domain = [("name", "=", self.barcode)]
-            if self.product_id:
-                lot_domain.append(("product_id", "=", self.product_id.id))
-            lot = self.env["stock.lot"].search(lot_domain)
+            lot = self._get_lot_from_barcode()
             if len(lot) == 1:
                 if self.option_group_id.fill_fields_from_lot:
                     quant_domain = [
@@ -270,13 +274,22 @@ class WizStockBarcodesRead(models.AbstractModel):
                         return False
                     if quants:
                         self.set_info_from_quants(quants)
+                        if self.option_group_id.scan_product_one_by_one:
+                            self.action_done()
                     else:
                         self.product_id = lot.product_id
                         self.action_lot_scaned_post(lot)
+                        if self.option_group_id.scan_product_one_by_one:
+                            self.action_done()
+
                     return True
                 else:
                     self.product_id = lot.product_id
                     self.action_lot_scaned_post(lot)
+                    if self.option_group_id.scan_product_one_by_one:
+                        self.action_done()
+                        return True
+
                 return True
             elif lot:
                 self._set_messagge_info(
