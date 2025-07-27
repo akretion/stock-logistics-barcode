@@ -384,6 +384,7 @@ class WizStockBarcodesRead(models.AbstractModel):
                 elif self.message_type != "success":
                     self.play_sounds(False)
                     return False
+            __import__("pdb").set_trace()
         if not barcode_found:
             self.play_sounds(barcode_found)
             if self.option_group_id.ignore_filled_fields:
