@@ -61,7 +61,7 @@ class StockPicking(models.Model):
             ).button_validate()
         else:
             res = super().button_validate()
-        if res is True and self.env.context.get("show_picking_type_action_tree", False):
+        if res is True and self.env.context.get("show_picking_type_action_list", False):
             res = self[:1].picking_type_id.get_action_picking_tree_ready()
 
         if self.state == "done":

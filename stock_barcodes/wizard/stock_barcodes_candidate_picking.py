@@ -108,7 +108,7 @@ class WizCandidatePicking(models.TransientModel):
         return wiz.action_cancel()
 
     def _get_picking_to_validate(self):
-        """Inject context show_picking_type_action_tree to redirect to picking list
+        """Inject context show_picking_type_action_list to redirect to picking list
         after validate picking in barcodes environment.
         The stock_barcodes_validate_picking key allows to know when a picking has been
         validated from stock barcodes interface.
@@ -117,7 +117,7 @@ class WizCandidatePicking(models.TransientModel):
             self.env["stock.picking"]
             .browse(self.env.context.get("picking_id", False))
             .with_context(
-                show_picking_type_action_tree=True, stock_barcodes_validate_picking=True
+                show_picking_type_action_list=True, stock_barcodes_validate_picking=True
             )
         )
 
