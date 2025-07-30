@@ -999,7 +999,7 @@ class WizStockBarcodesReadPicking(models.TransientModel):
         if not valid:
             return result
         action = self.env["ir.actions.actions"]._for_xml_id(
-            "stock_barcodes.stock_barcodes_action_picking_tree_ready"
+            "stock_barcodes.stock_barcodes_action_picking_list_ready"
         )
 
         if self.picking_id and self.picking_id.picking_type_id:

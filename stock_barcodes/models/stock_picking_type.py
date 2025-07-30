@@ -74,7 +74,7 @@ class StockPickingType(models.Model):
         context = dict(self.env.context)
         if context.get("operations_mode", False):
             return self._get_action(
-                "stock_barcodes.stock_barcodes_action_picking_tree_ready"
+                "stock_barcodes.stock_barcodes_action_picking_list_ready"
             )
         return super().get_action_picking_tree_ready()
 
