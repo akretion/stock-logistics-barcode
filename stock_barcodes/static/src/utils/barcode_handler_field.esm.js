@@ -27,10 +27,14 @@ patch(BarcodeHandlerField.prototype, {
             };
         });
     },
-    onBarcodeScanned(event) {
+    async onBarcodeScanned(event) {
         super.onBarcodeScanned(...arguments);
         if (this.props.record.resModel.includes("wiz.stock.barcodes.read")) {
-            $("#dummy_on_barcode_scanned").click();
+            await this.orm.call(
+                this.props.record.resModel,
+                "dummy_on_barcode_scanned",
+                [this.props.record.resId]
+            );
         }
     },
 });

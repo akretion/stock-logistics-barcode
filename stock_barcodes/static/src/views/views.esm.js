@@ -172,23 +172,21 @@ function setupView() {
     useEffect(() => {
         document.body.addEventListener("keydown", handleKeys);
 
-        this.$sound_ok = $("<audio>", {
-            src: "/stock_barcodes/static/src/sounds/bell.wav",
-            preload: "auto",
-        });
-        this.$sound_ok.appendTo("body");
-        this.$sound_ko = $("<audio>", {
-            src: "/stock_barcodes/static/src/sounds/error.wav",
-            preload: "auto",
-        });
-        this.$sound_ko.appendTo("body");
+        // The properties this.$sound_ok and this.$sound_ko must be updated
+        // inside the `handleNotification` function to `sound_ok` and `sound_ko` respectively.
+        const sound_ok = new Audio("/stock_barcodes/static/src/sounds/bell.wav");
+        sound_ok.preload = "auto";
+        document.body.appendChild(sound_ok);
 
+        const sound_ko = new Audio("/stock_barcodes/static/src/sounds/error.wav");
+        sound_ko.preload = "auto";
+        document.body.appendChild(sound_ko);
         busService.addChannel("stock_barcodes_scan");
         busService.addEventListener("notification", handleNotification);
 
         return () => {
-            this.$sound_ok.remove();
-            this.$sound_ko.remove();
+            sound_ok.remove();
+            sound_ko.remove();
             document.body.removeEventListener("keydown", handleKeys);
             busService.deleteChannel("stock_barcodes_scan");
             busService.removeEventListener("notification", handleNotification);

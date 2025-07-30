@@ -40,28 +40,38 @@ export class BarcodeBooleanToggle extends BooleanToggleField {
     enableFormEdit(newValue, editAction = false) {
         // Enable edit form
         if (this.props.name === "manual_entry" || editAction) {
-            const $form_edit = $("div.oe_stock_barcordes_content > div.scan_fields");
-            const $div_inventory_quant_ids = $("div[name='inventory_quant_ids']").find(
-                "div.o_kanban_renderer"
+            const form_edit = document.querySelector(
+                "div.oe_stock_barcordes_content > div.scan_fields"
             );
-            if ($form_edit.length > 0) {
+            const div_inventory_quant_ids = document.querySelector(
+                "div[name='inventory_quant_ids'] div.o_kanban_renderer"
+            );
+            if (form_edit) {
                 if (newValue) {
-                    $form_edit.removeClass("d-none");
-                    $div_inventory_quant_ids.addClass("inventory_quant_ids_with_form");
-                    $div_inventory_quant_ids.removeClass(
-                        "inventory_quant_ids_without_form"
-                    );
+                    form_edit.classList.remove("d-none");
+                    if (div_inventory_quant_ids) {
+                        div_inventory_quant_ids.classList.add(
+                            "inventory_quant_ids_with_form"
+                        );
+                        div_inventory_quant_ids.classList.remove(
+                            "inventory_quant_ids_without_form"
+                        );
+                    }
                 } else {
-                    $form_edit.addClass("d-none");
-                    $div_inventory_quant_ids.removeClass(
-                        "inventory_quant_ids_with_form"
-                    );
-                    $div_inventory_quant_ids.addClass(
-                        "inventory_quant_ids_without_form"
-                    );
+                    form_edit.classList.add("d-none");
+                    if (div_inventory_quant_ids) {
+                        div_inventory_quant_ids.classList.remove(
+                            "inventory_quant_ids_with_form"
+                        );
+                        div_inventory_quant_ids.classList.add(
+                            "inventory_quant_ids_without_form"
+                        );
+                    }
                 }
-            } else {
-                $div_inventory_quant_ids.addClass("inventory_quant_ids_without_form");
+            } else if (div_inventory_quant_ids) {
+                div_inventory_quant_ids.classList.add(
+                    "inventory_quant_ids_without_form"
+                );
             }
         }
     }
