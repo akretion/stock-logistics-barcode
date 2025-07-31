@@ -115,9 +115,15 @@ function setupView() {
                 ) {
                     if (type === "stock_barcodes_sound") {
                         if (payload.sound === "ko") {
-                            this.$sound_ko[0].play();
+                            const sound_ko = new Audio(
+                                "/stock_barcodes/static/src/sounds/error.wav"
+                            );
+                            sound_ko.play();
                         } else {
-                            this.$sound_ok[0].play();
+                            const sound_ok = new Audio(
+                                "/stock_barcodes/static/src/sounds/bell.wav"
+                            );
+                            sound_ok.play();
                         }
                     } else if (type === "stock_barcodes_focus") {
                         requestIdleCallback(() => {

@@ -64,9 +64,11 @@ patch(KanbanRenderer.prototype, {
         });
 
         onPatched(() => {
-            $("div.oe_kanban_operations-" + this.enableCurrentOperation).removeClass(
-                "d-none"
-            );
+            this.root.el
+                .querySelector(
+                    "div.oe_kanban_operations-" + this.enableCurrentOperation
+                )
+                ?.classList.remove("d-none");
         });
 
         if (isAllowedBarcodeModel(this.props.list.resModel)) {

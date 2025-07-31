@@ -7,11 +7,15 @@ import {patch} from "@web/core/utils/patch";
 
 patch(KanbanRecord.prototype, {
     async onGlobalClick(ev) {
-        const record_barcode = $('div[name="inventory_quant_ids"]');
-        if (record_barcode.length > 0) {
+        const recordBarcode = document.querySelector('div[name="inventory_quant_ids"]');
+        if (recordBarcode) {
             const record = this.props.record;
-            $("div.oe_kanban_operations").addClass("d-none");
-            $("div.oe_kanban_operations-" + record.data.id).removeClass("d-none");
+            document.querySelectorAll("div.oe_kanban_operations").forEach((el) => {
+                el.classList.add("d-none");
+            });
+            document
+                .querySelector("div.oe_kanban_operations-" + record.data.id)
+                ?.classList.remove("d-none");
         }
         super.onGlobalClick(ev);
     },

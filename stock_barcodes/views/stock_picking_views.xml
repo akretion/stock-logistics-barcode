@@ -67,7 +67,7 @@
             </xpath>
             <xpath
                 expr="//button[@name='get_action_picking_tree_ready']"
-                position="inside"
+                position="after"
             >
                 <div
                     class="float-end mt8"
