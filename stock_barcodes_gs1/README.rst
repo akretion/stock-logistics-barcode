@@ -23,7 +23,7 @@ Stock Barcodes GS1
     :target: https://translation.odoo-community.org/projects/stock-logistics-barcode-16-0/stock-logistics-barcode-16-0-stock_barcodes_gs1
     :alt: Translate me on Weblate
 .. |badge5| image:: https://img.shields.io/badge/runboat-Try%20me-875A7B.png
-    :target: https://runboat.odoo-community.org/webui/builds.html?repo=OCA/stock-logistics-barcode&target_branch=16.0
+    :target: https://runboat.odoo-community.org/builds?repo=OCA/stock-logistics-barcode&target_branch=16.0
     :alt: Try me on Runboat
 
 |badge1| |badge2| |badge3| |badge4| |badge5|

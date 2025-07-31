@@ -12,5 +12,6 @@
     "installable": True,
     "data": [
         "views/barcodes_view.xml",
+        "data/barcodes_gs1_rules.xml",
     ],
 }
