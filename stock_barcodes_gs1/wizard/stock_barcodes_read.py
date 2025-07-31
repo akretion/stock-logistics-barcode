@@ -19,7 +19,7 @@ class WizStockBarcodesRead(models.AbstractModel):
 
     def _process_ai_01(self, gs1_list):
         """Packaging"""
-        return self.process_barcode_packaging_id()
+        return self._process_ai_02(gs1_list)
 
     def _process_ai_02(self, gs1_list):
         """Product identification"""
@@ -31,10 +31,10 @@ class WizStockBarcodesRead(models.AbstractModel):
         res = self.process_barcode_product_id()
         # If we did not found a product and we have not a package, maybe we
         # can try to use this product barcode as a packaging barcode
-        if not res:
+        if False:
             # Try to get packaging 01 with product GTIN
             packaging_ai = next(filter(lambda f: f["ai"] == "01", gs1_list), False)
-            if not packaging_ai:
+            if not packaging_ai and False:
                 res = self._process_ai_01(gs1_list)
         if not res:
             # Try to get packaging 00 with product GTIN
