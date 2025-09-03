@@ -64,9 +64,8 @@ class StockPicking(models.Model):
         if res is True and self.env.context.get("show_picking_type_action_list", False):
             res = self[:1].picking_type_id.get_action_picking_tree_ready()
 
-        if (
-            self.env.context.get("stock_barcodes_validate_picking", False)
-            and self.state == "done"
+        if self.env.context.get("stock_barcodes_validate_picking", False) and all(
+            p.state == "done" for p in self
         ):
             message_payload = {
                 "type": "actions_barcode",
