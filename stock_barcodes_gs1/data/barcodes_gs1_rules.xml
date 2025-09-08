@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data noupdate="1">
+        <record id="barcodes_gs1_nomenclature.barcode_rule_gs1_17" model="barcode.rule">
+            <field name="pattern">(11)(\d{6})</field>
+        </record>
+    </data>
+</odoo>
