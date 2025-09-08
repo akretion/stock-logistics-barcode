@@ -123,7 +123,8 @@ class WizStockBarcodesRead(models.AbstractModel):
         return True
 
     def _hook_process_gs1_value(self, gs1_item):
-        """Hook to be extended by other modules"""
+        if gs1_item.get("ai") == "01":
+            gs1_item["ai"] = "02"
         return gs1_item["value"]
 
     @staticmethod
