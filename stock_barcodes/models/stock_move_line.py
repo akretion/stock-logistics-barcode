@@ -16,6 +16,31 @@ class StockMoveLine(models.Model):
     )
     qty_done = fields.Float(compute="_compute_qty_done", store=True)
 
+    def _merge_sml(self):
+        self.ensure_one()
+        key = (
+            self.location_id,
+            self.lot_id.id,
+            self.package_id.id,
+            self.owner_id.id,
+            self.picked,
+        )
+        to_unlink = self.env["stock.move.line"]
+        for ml in self.move_id.move_line_ids:
+            if ml == self:
+                continue
+            ml_key = (
+                ml.location_id,
+                ml.lot_id.id,
+                ml.package_id.id,
+                ml.owner_id.id,
+                ml.picked,
+            )
+            if key == ml_key:
+                to_unlink |= ml
+                self.write({"quantity": self.quantity + ml.quantity})
+        to_unlink.unlink()
+
     @api.depends("picked", "quantity")
     def _compute_qty_done(self):
         for line in self:
