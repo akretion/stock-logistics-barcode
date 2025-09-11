@@ -294,7 +294,7 @@
                                             >
                                                 <span
                                                     class="h3"
-                                                    t-esc="record.qty_done.raw_value"
+                                                    t-esc="record.quantity.raw_value"
                                                 />
 
                                                 <button

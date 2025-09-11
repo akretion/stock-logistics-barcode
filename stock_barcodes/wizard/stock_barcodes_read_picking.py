@@ -628,9 +628,10 @@ class WizStockBarcodesReadPicking(models.TransientModel):
                 qty_done = line.qty_done + assigned_qty
             sml_vals.update(
                 {
-                    "qty_done": qty_done,
                     "quantity": qty_done,
                     "result_package_id": self.result_package_id.id,
+                    "picked": True,
+                    "barcode_scan_state": "done",
                 }
             )
             # Add or remove result_pselfackage_id
@@ -639,12 +640,16 @@ class WizStockBarcodesReadPicking(models.TransientModel):
                     lambda q: q.lot_id == self.lot_id
                 ).mapped("quantity")
             )
-            if sml_vals["qty_done"] >= package_qty_available:
+            if sml_vals["quantity"] >= package_qty_available:
                 if not self.result_package_id:
                     sml_vals.update({"result_package_id": self.package_id.id})
             elif line.result_package_id == line.package_id:
                 sml_vals.update({"result_package_id": False})
+            remaining_qty = line.quantity - qty_done
+            if remaining_qty > 0.0:
+                line.copy({"quantity": remaining_qty, "picked": False})
             self._update_stock_move_line(line, sml_vals)
+            line._merge_sml()
             if line.qty_done >= line.quantity:
                 line.barcode_scan_state = "done"
             elif self.env.context.get("done_forced"):
@@ -882,8 +887,8 @@ class WizStockBarcodesReadPicking(models.TransientModel):
                     "package_id": line.package_id.id,
                     "result_package_id": line.result_package_id.id,
                     "uom_id": line.product_uom_id.id,
-                    "product_uom_qty": line.move_id.product_uom_qty,
-                    "product_qty_reserved": line.quantity_product_uom,
+                    "product_uom_qty": line.quantity_product_uom,
+                    "product_qty_reserved": line.quantity,
                     "line_ids": [(6, 0, line.ids)],
                     "stock_move_ids": [(6, 0, line.move_id.ids)],
                     "package_product_qty": package_product_dic
