@@ -7,6 +7,7 @@
                 string="Barcodes"
                 class="oe_stock_barcordes_form h-100"
                 js_class="stock_barcodes_form"
+                hotkeys="f2,f4,f9,f12"
             >
                 <div class="d-flex flex-column h-100" invisible="display_menu">
                     <div

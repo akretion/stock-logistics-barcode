@@ -21,11 +21,11 @@ export class BarcodeBooleanToggle extends BooleanToggleField {
     }
 
     /*
-  This is needed because, whenever we click the checkbox to enter data
-  manually, the checkbox will be focused causing that when we scan the
-  barcode afterwards, it will not perform the python on_barcode_scanned
-  function.
-  */
+    This is needed because, whenever we click the checkbox to enter data
+    manually, the checkbox will be focused causing that when we scan the
+    barcode afterwards, it will not perform the python on_barcode_scanned
+    function.
+    */
     onChange(newValue) {
         super.onChange(newValue);
         // We can't blur an element on its onchange event
@@ -40,28 +40,37 @@ export class BarcodeBooleanToggle extends BooleanToggleField {
     enableFormEdit(newValue, editAction = false) {
         // Enable edit form
         if (this.props.name === "manual_entry" || editAction) {
-            const $form_edit = $("div.oe_stock_barcordes_content > div.scan_fields");
-            const $div_inventory_quant_ids = $("div[name='inventory_quant_ids']").find(
-                "div.o_kanban_renderer"
+            // Remplacement de jQuery
+            const formEdit = document.querySelector(
+                "div.oe_stock_barcordes_content > div.scan_fields"
             );
-            if ($form_edit.length > 0) {
+            const divInventoryQuantIds = document.querySelector(
+                "div[name='inventory_quant_ids'] div.o_kanban_renderer"
+            );
+            if (formEdit && !this.show_form_scan) {
                 if (newValue) {
-                    $form_edit.removeClass("d-none");
-                    $div_inventory_quant_ids.addClass("inventory_quant_ids_with_form");
-                    $div_inventory_quant_ids.removeClass(
-                        "inventory_quant_ids_without_form"
-                    );
+                    formEdit.classList.remove("d-none");
+                    if (divInventoryQuantIds) {
+                        divInventoryQuantIds.classList.add(
+                            "inventory_quant_ids_with_form"
+                        );
+                        divInventoryQuantIds.classList.remove(
+                            "inventory_quant_ids_without_form"
+                        );
+                    }
                 } else {
-                    $form_edit.addClass("d-none");
-                    $div_inventory_quant_ids.removeClass(
-                        "inventory_quant_ids_with_form"
-                    );
-                    $div_inventory_quant_ids.addClass(
-                        "inventory_quant_ids_without_form"
-                    );
+                    formEdit.classList.add("d-none");
+                    if (divInventoryQuantIds) {
+                        divInventoryQuantIds.classList.remove(
+                            "inventory_quant_ids_with_form"
+                        );
+                        divInventoryQuantIds.classList.add(
+                            "inventory_quant_ids_without_form"
+                        );
+                    }
                 }
-            } else {
-                $div_inventory_quant_ids.addClass("inventory_quant_ids_without_form");
+            } else if (divInventoryQuantIds) {
+                divInventoryQuantIds.classList.add("inventory_quant_ids_without_form");
             }
         }
     }

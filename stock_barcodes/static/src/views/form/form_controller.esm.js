@@ -31,8 +31,9 @@ export class StockBarcodesFormController extends FormController {
         useEffect(() => {
             busService.addChannel("stock_barcodes_form_update");
             busService.addEventListener("notification", handleNotification);
-            const $applyInventory = $("span.count_apply_inventory");
-            if ($applyInventory.length > 0) {
+            // Remplacement de jQuery
+            const applyInventory = document.querySelector("span.count_apply_inventory");
+            if (applyInventory) {
                 if (!this.enableApplyCount) {
                     this.countApplyInventory(1);
                     this.enableApplyCount = true;
@@ -63,9 +64,10 @@ export class StockBarcodesFormController extends FormController {
     }
 
     countApplyInventory(countApply = 0) {
-        const $countApply = $("span.count_apply_inventory");
-        if ($countApply.length) {
-            $countApply.text(countApply);
+        // Remplacement de jQuery
+        const countApplyEl = document.querySelector("span.count_apply_inventory");
+        if (countApplyEl) {
+            countApplyEl.textContent = countApply;
         }
     }
 }

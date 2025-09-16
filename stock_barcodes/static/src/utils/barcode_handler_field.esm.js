@@ -30,7 +30,8 @@ patch(BarcodeHandlerField.prototype, {
     onBarcodeScanned(event) {
         super.onBarcodeScanned(...arguments);
         if (this.props.record.resModel.includes("wiz.stock.barcodes.read")) {
-            $("#dummy_on_barcode_scanned").click();
+            // Remplacement de jQuery par l'API DOM standard
+            document.querySelector("#dummy_on_barcode_scanned")?.click();
         }
     },
 });
