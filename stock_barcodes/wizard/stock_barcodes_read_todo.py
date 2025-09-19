@@ -213,10 +213,26 @@ class WizStockBarcodesReadTodo(models.TransientModel):
             wiz_barcode.product_qty = quant.qty_done
 
         wiz_barcode.manual_entry = True
-        self.env["bus.bus"]._sendone(
-            "stock_barcodes_scan",
-            "stock_barcodes_edit_manual",
-            {
+#        self.env['bus.bus']._sendone(self.env.user.partner_id, 'simple_notification', {
+#            'type': 'success',
+#            'message': "Nilvera connection successful!",
+#        })
+        message_payload = {
+            "type": "stock_barcodes_edit_manual",
+            "payload": {
                 "manual_entry": True,
-            },
+            }
+        }
+        self.env["bus.bus"]._sendone(
+            self.env.user.partner_id,
+            "stock_barcodes_scan",
+            message_payload
         )
+
+#        self.env["bus.bus"]._sendone(
+#            "stock_barcodes_scan",
+#            "stock_barcodes_edit_manual",
+#            {
+#                "manual_entry": True,
+#            },
+#        )

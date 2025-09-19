@@ -8,23 +8,13 @@ patch(BarcodeHandlerField.prototype, {
     /* eslint-disable no-unused-vars */
     setup() {
         super.setup();
-        const busService = this.env.services.bus_service;
-        this.orm = useService("orm");
-        const notifyChanges = async ({detail: notifications}) => {
-            for (const {payload, type} of notifications) {
-                if (type === "stock_barcodes_refresh_data") {
-                    await this.env.model.root.load();
-                    this.env.model.notify();
-                }
+        const busService = useService("bus_service");
+        busService.subscribe("barcode_reload", (payload) => {
+            // On vérifie le sous-type si nécessaire, ou on agit directement
+            if (payload.type === "stock_barcodes_refresh_data") {
+                this.env.model.root.load();
+                this.env.model.notify();
             }
-        };
-        useEffect(() => {
-            busService.addChannel("barcode_reload");
-            busService.addEventListener("notification", notifyChanges);
-            return () => {
-                busService.deleteChannel("barcode_reload");
-                busService.removeEventListener("notification", notifyChanges);
-            };
         });
     },
     onBarcodeScanned(event) {

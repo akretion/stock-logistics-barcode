@@ -18,20 +18,14 @@ export class StockBarcodesFormController extends FormController {
             this.display.controlPanel = false;
         }
 
-        const handleNotification = ({detail: notifications}) => {
-            if (notifications && notifications.length > 0) {
-                notifications.forEach((notif) => {
-                    const {payload, type} = notif;
-                    if (type === "count_apply_inventory" && payload) {
-                        this.countApplyInventory(payload.count);
-                    }
-                });
+        busService.subscribe("stock_barcodes_form_update", (notification) => {
+            const {type, payload} = notification;
+            if (type === "count_apply_inventory" && payload) {
+                this.countApplyInventory(payload.count);
             }
-        };
-        useEffect(() => {
-            busService.addChannel("stock_barcodes_form_update");
-            busService.addEventListener("notification", handleNotification);
-            // Remplacement de jQuery
+        });
+
+        onMounted(async () => {
             const applyInventory = document.querySelector("span.count_apply_inventory");
             if (applyInventory) {
                 if (!this.enableApplyCount) {
@@ -41,13 +35,7 @@ export class StockBarcodesFormController extends FormController {
             } else {
                 this.enableApplyCount = false;
             }
-            return () => {
-                busService.deleteChannel("stock_barcodes_form_update");
-                busService.removeEventListener("notification", handleNotification);
-            };
-        });
 
-        onMounted(async () => {
             if (this.props.resModel === "wiz.stock.barcodes.read.inventory") {
                 const fields = ["count_inventory_quants"];
                 const countApply = await ormService.call(

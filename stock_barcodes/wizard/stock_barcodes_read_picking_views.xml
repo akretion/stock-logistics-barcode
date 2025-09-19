@@ -292,10 +292,7 @@
                                             <div
                                                 class="col-4 col-md-4 d-flex justify-content-end align-items-center"
                                             >
-                                                <span
-                                                    class="h3"
-                                                    t-esc="record.quantity.raw_value"
-                                                />
+                                                <field name="quantity" class="h3" />
 
                                                 <button
                                                     name="action_barcode_detailed_operation_unlink"

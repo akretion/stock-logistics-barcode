@@ -15,73 +15,81 @@ import {useService} from "@web/core/utils/hooks";
 import {useHotkey} from "@web/core/hotkeys/hotkey_hook";
 
 function setupView() {
-    const actionService = useService("action");
-    const busService = this.env.services.bus_service;
+    const busService = useService("bus_service");
     const notification = useService("notification");
+    // S'abonne aux notifications spécifiques à notre module
+    busService.subscribe("stock_barcodes_scan", (notif) => {
+        const { type, payload } = notif;
 
-    const handleNotification = ({detail: notifications}) => {
-        if (notifications && notifications.length > 0) {
-            notifications.forEach((notif) => {
-                const {payload, type} = notif;
-                if (
-                    this.model.root.resModel === payload.res_model &&
-                    this.model.root.resId === payload.res_id
-                ) {
-                    if (type === "stock_barcodes_sound") {
-                        if (payload.sound === "ko") {
-                            this.soundKoEl.play();
-                        } else {
-                            this.soundOkEl.play();
-                        }
-                    } else if (type === "stock_barcodes_focus") {
-                        requestIdleCallback(() => {
-                            const input = document.querySelector(
-                                `[name=${payload.field_name}] input`
-                            );
-                            if (input) {
-                                input.focus();
-                            }
-                        });
-                    } else if (type === "stock_barcodes_notify") {
-                        notification.add(notif.payload.message, {
-                            title: notif.payload.title,
-                            type: notif.payload.type,
-                            sticky: notif.payload.sticky,
-                        });
-                    }
-                }
+        // Sépare les instructions pour l'UI des données pour le modèle
+//        const uiInstructions = {
+//            field_to_focus: payload.field_to_focus,
+//        };
+        const modelData = { ...payload };
+//        delete modelData.field_to_focus;
 
-                if (type === "stock_barcodes_edit_manual") {
-                    if (payload.manual_entry) {
-                        this.env.bus.trigger("enableFormEditBarcode");
-                    } else if (!payload.manual_entry) {
-                        this.env.bus.trigger("disableFormEditBarcode");
-                    }
-                } else if (type === "actions_barcode") {
-                    if (payload.valid_picking) {
-                        notification.add(_t("The transfer has been validated"), {
-                            type: "success",
-                        });
-                    } else if (payload.apply_inventory) {
-                        notification.add(
-                            _t("The inventory adjustment has been validated"),
-                            {
-                                type: "success",
-                            }
-                        );
-                        return actionService.doAction(
-                            "stock_barcodes.action_stock_barcodes_action_client"
-                        );
-                    }
-                } else if (type === "actions_barcode_notification") {
-                    notification.add(_t(payload.message), {
-                        type: payload.message_type,
-                        sticky: payload.sticky,
-                    });
+        if (modelData.res_id && this.model.root.resId !== modelData.res_id) {
+            return;
+        }
+        if (type === "stock_barcodes_sound") {
+            if (payload.sound === "ko") {
+                if (this.soundKoEl) this.soundKoEl.play();
+            } else {
+                if (this.soundOkEl) this.soundOkEl.play();
+            }
+        } else if (type === "stock_barcodes_focus") {
+            requestIdleCallback(() => {
+                const input = document.querySelector(
+                    `[name=${payload.field_name}] input`
+                );
+                if (input) {
+                    input.focus();
                 }
             });
+        } else if (type === "stock_barcodes_notify") {
+            notification.add(notif.payload.message, {
+                title: notif.payload.title,
+                type: notif.payload.type,
+                sticky: notif.payload.sticky,
+            });
+        } else if (type === "stock_barcodes_edit_manual") {
+//            this.model.root.update(modelData);
+            if (payload.manual_entry) {
+                this.env.bus.trigger("enableFormEditBarcode");
+            } else if (!payload.manual_entry) {
+                this.env.bus.trigger("disableFormEditBarcode");
+            }
+        } else if (type === "actions_barcode") {
+            if (payload.valid_picking) {
+                notification.add(_t("The transfer has been validated"), {
+                    type: "success",
+                });
+            } else if (payload.apply_inventory) {
+                notification.add(
+                    _t("The inventory adjustment has been validated"),
+                    {
+                        type: "success",
+                    }
+                );
+                return actionService.doAction(
+                    "stock_barcodes.action_stock_barcodes_action_client"
+                );
+            }
+
+        } else if (type === "actions_barcode_notification") {
+            notification.add(_t(payload.message), {
+                type: payload.message_type,
+                sticky: payload.sticky,
+            });
         }
-    };
+ //           requestIdleCallback(() => {
+ //               const input = document.querySelector(`[name=${uiInstructions.field_to_focus}] input`);
+ //               if (input) {
+ //                   input.focus();
+ //                   input.select();
+ //               }
+ //           });
+    });
 
     useEffect(() => {
         this.soundOkEl = document.createElement("audio");
@@ -94,14 +102,10 @@ function setupView() {
         this.soundKoEl.preload = "auto";
         document.body.appendChild(this.soundKoEl);
 
-        busService.addChannel("stock_barcodes_scan");
-        busService.addEventListener("notification", handleNotification);
 
         return () => {
             this.soundOkEl.remove();
             this.soundKoEl.remove();
-            busService.deleteChannel("stock_barcodes_scan");
-            busService.removeEventListener("notification", handleNotification);
         };
     });
 }

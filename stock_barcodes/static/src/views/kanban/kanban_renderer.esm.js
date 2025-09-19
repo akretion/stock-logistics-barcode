@@ -44,23 +44,12 @@ patch(KanbanRenderer.prototype, {
         this.action = useService("action");
         const busService = this.env.services.bus_service;
         this.enableCurrentOperation = 0;
-        const handleNotification = ({detail: notifications}) => {
-            if (notifications && notifications.length > 0) {
-                notifications.forEach((notif) => {
-                    const {payload, type} = notif;
-                    if (type === "enable_operations" && payload) {
-                        this.enableCurrentOperation = payload.id;
-                    }
-                });
+        // CORRECTION : Remplacement de l'ancien système par `subscribe`.
+        busService.subscribe("stock_barcodes_kanban_update", (notif) => {
+            const { subtype: type, data: payload } = notif;
+            if (type === "enable_operations" && payload) {
+                this.enableCurrentOperation = payload.id;
             }
-        };
-        useEffect(() => {
-            busService.addChannel("stock_barcodes_kanban_update");
-            busService.addEventListener("notification", handleNotification);
-            return () => {
-                busService.deleteChannel("stock_barcodes_kanban_update");
-                busService.removeEventListener("notification", handleNotification);
-            };
         });
 
         onPatched(() => {

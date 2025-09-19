@@ -7,5 +7,11 @@ from odoo import models
 class BarcodesEventsMixin(models.AbstractModel):
     _inherit = "barcodes.barcode_events_mixin"
 
-    def send_bus_done(self, channel, type_channel, data=None):
-        self.env["bus.bus"]._sendone(channel, type_channel, data or {})
+    def send_bus_done(self, channel, type_channel, payload=None):
+        if not payload:
+            payload = {}
+        data = {
+            "type": type_channel,
+            "payload": payload
+        }
+        self.env["bus.bus"]._sendone(self.env.user.partner_id, channel, data)

@@ -415,8 +415,7 @@ class WizStockBarcodesRead(models.AbstractModel):
                 ],
                 limit=1,
             )
-
-            self.env["bus.bus"]._sendone(
+            self.send_bus_done(
                 "stock_barcodes_scan",
                 "actions_main_menu_barcode",
                 {
@@ -425,6 +424,17 @@ class WizStockBarcodesRead(models.AbstractModel):
                     "barcode": barcode,
                 },
             )
+
+
+#            self.env["bus.bus"]._sendone(
+#                "stock_barcodes_scan",
+#                "actions_main_menu_barcode",
+#                {
+#                    "action_ok": len(barcode_action) > 0,
+#                    "action": barcode_action.open_action() if barcode_action else "",
+#                    "barcode": barcode,
+#                },
+#            )
         else:
             self._set_messagge_info("success", _("OK"))
             options = self.option_group_id.option_ids
