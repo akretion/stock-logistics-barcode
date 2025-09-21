@@ -45,12 +45,21 @@ patch(KanbanRenderer.prototype, {
         const busService = this.env.services.bus_service;
         this.enableCurrentOperation = 0;
         // CORRECTION : Remplacement de l'ancien système par `subscribe`.
-        busService.subscribe("stock_barcodes_kanban_update", (notif) => {
-            const { subtype: type, data: payload } = notif;
-            if (type === "enable_operations" && payload) {
-                this.enableCurrentOperation = payload.id;
-            }
+
+        useEffect(() => {
+            const handleBusNotification = (notif) => {
+                const { type, payload } = notif;
+               // const { subtype: type, data: payload } = notif;
+                if (type === "enable_operations" && payload) {
+                    this.enableCurrentOperation = payload.id;
+                }
+            };
+            busService.subscribe("stock_barcodes_kanban_update", handleBusNotification);
+            return () => {
+                busService.unsubscribe("stock_barcodes_kanban_update", handleBusNotification);
+            };
         });
+
 
         onPatched(() => {
             // Remplacement de jQuery

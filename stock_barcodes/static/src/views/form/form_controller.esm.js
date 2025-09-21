@@ -18,11 +18,17 @@ export class StockBarcodesFormController extends FormController {
             this.display.controlPanel = false;
         }
 
-        busService.subscribe("stock_barcodes_form_update", (notification) => {
-            const {type, payload} = notification;
-            if (type === "count_apply_inventory" && payload) {
-                this.countApplyInventory(payload.count);
-            }
+        useEffect(() => {
+            const handleBusNotification = (notif) => {
+                const { type, payload } = notif;
+                if (type === "count_apply_inventory" && payload) {
+                    this.countApplyInventory(payload.count);
+                }
+            };
+            busService.subscribe("stock_barcodes_form_update", handleBusNotification);
+            return () => {
+                busService.unsubscribe("stock_barcodes_form_update", handleBusNotification);
+            };
         });
 
         onMounted(async () => {

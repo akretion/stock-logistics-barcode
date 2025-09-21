@@ -9,12 +9,19 @@ patch(BarcodeHandlerField.prototype, {
     setup() {
         super.setup();
         const busService = useService("bus_service");
-        busService.subscribe("barcode_reload", (payload) => {
-            // On vérifie le sous-type si nécessaire, ou on agit directement
-            if (payload.type === "stock_barcodes_refresh_data") {
-                this.env.model.root.load();
-                this.env.model.notify();
-            }
+
+        useEffect(() => {
+            const handleBusNotification = (notif) => {
+                const { type, payload } = notif;
+                if (payload.type === "stock_barcodes_refresh_data") {
+                    this.env.model.root.load();
+                    this.env.model.notify();
+                }
+            };
+            busService.subscribe("barcode_reload", handleBusNotification);
+            return () => {
+                busService.unsubscribe("barcode_reload", handleBusNotification);
+            };
         });
     },
     onBarcodeScanned(event) {
