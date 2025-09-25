@@ -61,11 +61,15 @@ class StockMoveLine(models.Model):
         for sml in self:
             stock_move = sml.move_id
             stock_move.barcode_backorder_action = "pending"
-            sml.unlink()
+            # sml.unlink()
+            # Only reset the picked mark, not need to unlink ?
+            # We want to avoid re-reserving the stock move since we'd have to remove
+            # the picked flag, which would reset it for every stock move line linked it
+            # our stock.move
+            sml.write({"picked": False})
             # HACK: To force refresh wizard values
             wiz_barcode = self.env["wiz.stock.barcodes.read.picking"].browse(
                 self.env.context.get("wiz_barcode_id", False)
             )
-            stock_move._action_assign()
             wiz_barcode.fill_todo_records()
             wiz_barcode.determine_todo_action()
