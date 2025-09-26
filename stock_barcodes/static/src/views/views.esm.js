@@ -10,13 +10,31 @@ import {ListController} from "@web/views/list/list_controller";
 import {_t} from "@web/core/l10n/translation";
 import {isAllowedBarcodeModel} from "../utils/barcodes_models_utils.esm";
 import {patch} from "@web/core/utils/patch";
-import {useEffect} from "@odoo/owl";
+import {useEffect, useRef} from "@odoo/owl";
 import {useService} from "@web/core/utils/hooks";
 import {useHotkey} from "@web/core/hotkeys/hotkey_hook";
 
 function setupView() {
     const busService = useService("bus_service");
     const notification = useService("notification");
+    const rootRef = useRef("root");
+
+    // Fonction utilitaire pour mettre le focus de manière robuste
+    const focusOnElement = (selector, retries = 5, interval = 50) => {
+        if (!rootRef.el) return;
+        let attempt = 0;
+        const tryFocus = () => {
+            const element = rootRef.el.querySelector(selector);
+            if (element) {
+                element.focus();
+                element.select();
+            } else if (attempt < retries) {
+                attempt++;
+                setTimeout(tryFocus, interval);
+            }
+        };
+        tryFocus();
+    };
 
     useEffect(() => {
         // On définit la fonction de traitement ici pour la référencer plus tard
@@ -34,14 +52,7 @@ function setupView() {
                     if (this.soundOkEl) this.soundOkEl.play();
                 }
             } else if (type === "stock_barcodes_focus") {
-                requestIdleCallback(() => {
-                    const input = document.querySelector(
-                        `[name=${payload.field_name}] input`
-                    );
-                    if (input) {
-                        input.focus();
-                    }
-                });
+                focusOnElement(`[name=${payload.field_name}] input`);
             } else if (type === "stock_barcodes_notify") {
                 notification.add(notif.payload.message, {
                     title: notif.payload.title,
