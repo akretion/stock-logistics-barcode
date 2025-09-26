@@ -381,6 +381,7 @@ class WizStockBarcodesReadPicking(models.TransientModel):
             "picking_id": picking.id,
             "move_id": candidate_move.id,
             "qty_done": available_qty,
+            "picked": True,
             "product_uom_id": candidate_move.product_uom.id or self.product_id.uom_id.id
             if not self.packaging_id
             else self.packaging_id.product_uom_id.id,
@@ -584,8 +585,7 @@ class WizStockBarcodesReadPicking(models.TransientModel):
                 lines = lines.filtered_domain(candidate_domain)
         available_qty = self.product_qty
         max_quantity = sum(
-            sm.product_uom_qty
-            - (sm.quantity if sm.quantity != sm.product_uom_qty else 0)
+            sm.product_uom_qty - sum(sm.move_line_ids.mapped("qty_done"))
             for sm in moves_todo
         )
         if (
@@ -697,6 +697,7 @@ class WizStockBarcodesReadPicking(models.TransientModel):
                     sml.move_id.product_uom_qty = self.product_qty
                 move_lines_dic[sml.id] = sml.qty_done
             # Ensure that the state of stock_move linked to the sml read is assigned
+            # TODO shouldn't it call _action_confirm for push rules ??
             stock_move_lines.move_id.filtered(
                 lambda sm: sm.state == "draft"
             ).state = "assigned"
