@@ -144,7 +144,8 @@ class WizStockBarcodesReadTodo(models.TransientModel):
                 == "move_line_ids"
                 and rec.line_ids
                 and (
-                    all(ml.picked for ml in rec.stock_move_ids.move_line_ids)
+                    sum(rec.stock_move_ids.move_line_ids.mapped("qty_done"))
+                    >= sum(rec.stock_move_ids.mapped("product_uom_qty"))
                     or not any(
                         ln.barcode_scan_state == "pending" for ln in rec.line_ids
                     )
