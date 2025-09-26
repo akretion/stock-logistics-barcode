@@ -341,8 +341,7 @@
                     name="action_validate_picking"
                     type="object"
                     icon="fa-check fa-2x"
-                    class="btn btn-secondary w-100 oe_kanban_action_button btn-sm text-uppercase
-                    d-flex justify-content-center align-items-center fs-2"
+                    t-attf-class="btn w-100 oe_kanban_action_button btn-sm text-uppercase d-flex justify-content-center align-items-center fs-2 #{pending_move_ids == False ? 'btn-primary' : 'btn-secondary'}"
                     invisible="picking_state not in ('draft', 'assigned', 'confirmed')"
                     confirm="Are you sure to validate the picking ?"
                     data-hotkey="'shift+v'"
