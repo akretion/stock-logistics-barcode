@@ -219,6 +219,7 @@ class WizStockBarcodesReadPicking(models.TransientModel):
                     sml[location_field].posy,
                     sml[location_field].posz,
                     sml[location_field].name,
+                    sml["product_id"].default_code,
                 )
             )
         else:
@@ -229,6 +230,7 @@ class WizStockBarcodesReadPicking(models.TransientModel):
                     (sm.move_line_ids[:1] or sm)[location_field].posy,
                     (sm.move_line_ids[:1] or sm)[location_field].posz,
                     (sm.move_line_ids[:1] or sm)[location_field].name,
+                    (sm.move_line_ids[:1] or sm)["product_id"].default_code,
                 )
             )
         return move_lines
