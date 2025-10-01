@@ -612,7 +612,7 @@ class WizStockBarcodesReadPicking(models.TransientModel):
         for line in lines:
             if line.quantity_product_uom and len(lines) > 1:
                 assigned_qty = min(
-                    max(line.quantity_product_uom - line.quantity, 0.0), available_qty
+                    max(line.quantity - line.qty_done, 0.0), available_qty
                 )
             else:
                 assigned_qty = available_qty
