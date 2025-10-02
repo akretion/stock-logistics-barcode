@@ -456,6 +456,7 @@ class WizStockBarcodesRead(models.AbstractModel):
                 )
                 if option_func:
                     res = option_func()
+                    self._check_guided_values(field_name=option.field_name)
                     if res:
                         barcode_found = True
                         self.play_sounds(barcode_found)
@@ -581,29 +582,34 @@ class WizStockBarcodesRead(models.AbstractModel):
             self._set_messagge_info("success", _("Manual entry OK"))
         return True
 
-    def _check_guided_values(self):
+    def _check_guided_values(self, field_name=None):
         if (
-            self.product_id != self.guided_product_id
+            (not field_name or field_name == "product_id")
+            and self.product_id != self.guided_product_id
             and self.option_group_id.get_option_value("product_id", "forced")
         ):
             self._set_messagge_info("more_match", _("Wrong product"))
             self.product_qty = 0.0
             return False
         if (
-            self.guided_product_id.tracking != "none"
+            (not field_name or field_name == "lot_id")
+            and self.guided_product_id.tracking != "none"
             and self.lot_id != self.guided_lot_id
             and self.option_group_id.get_option_value("lot_id", "forced")
         ):
             self._set_messagge_info("more_match", _("Wrong lot"))
             return False
         if (
-            self.location_id != self.guided_location_id
+            (not field_name or field_name == "location_id")
+            and self.location_id != self.guided_location_id
             and self.option_group_id.get_option_value("location_id", "forced")
         ):
+            self.barcode = False
             self._set_messagge_info("more_match", _("Wrong location"))
             return False
         if (
-            self.location_dest_id != self.guided_location_dest_id
+            (not field_name or field_name == "location_dest_id")
+            and self.location_dest_id != self.guided_location_dest_id
             and self.option_group_id.get_option_value("location_dest_id", "forced")
         ):
             self._set_messagge_info("more_match", _("Wrong location dest"))
