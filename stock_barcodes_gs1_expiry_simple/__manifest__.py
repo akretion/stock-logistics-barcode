@@ -4,7 +4,7 @@
 
 {
     "name": "Stock Barcodes GS1 Expiry Simple",
-    "version": "16.0.1.0.0",
+    "version": "18.0.1.0.0",
     "category": "Warehouse",
     "license": "AGPL-3",
     "summary": "Glue module between stock_barcodes_gs1 and product_expiry_simple",

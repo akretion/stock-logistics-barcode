@@ -17,7 +17,7 @@
                     name="expiry_date_block"
                     class="m-0"
                     colspan="2"
-                    attrs="{'invisible': ['|', ('create_lot', '=', False), ('product_use_expiry_date', '=', False)]}"
+                    invisible="not create_lot or not product_use_expiry_date"
                 >
                     <strong class="d-none d-sm-block">Expiry Date</strong>
                     <span
