@@ -182,6 +182,11 @@ class WizStockBarcodesRead(models.AbstractModel):
                 self.manual_entry = True
                 self.send_bus_done(
                     "stock_barcodes_scan",
+                    "stock_barcodes_edit_manual",
+                    {"manual_entry": True},
+                )
+                self.send_bus_done(
+                    "stock_barcodes_scan",
                     "actions_barcode_notification",
                     {
                         "message": message,
