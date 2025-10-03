@@ -285,8 +285,8 @@ class WizStockBarcodesReadPicking(models.TransientModel):
 
         if self.option_group_id.get_option_value("location_id", "filled_default"):
             self.location_id = move_line.location_id
-        #        elif self.picking_type_code != "incoming":
-        #            self.location_id = False
+        elif self.location_id != self.guided_location_id:
+            self.location_id = False
         if self.option_group_id.get_option_value("location_dest_id", "filled_default"):
             self.location_dest_id = move_line.location_dest_id
         elif self.picking_type_code != "outgoing":
