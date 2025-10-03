@@ -589,6 +589,7 @@ class WizStockBarcodesRead(models.AbstractModel):
             and self.option_group_id.get_option_value("product_id", "forced")
         ):
             self._set_messagge_info("more_match", _("Wrong product"))
+            self.product_id = False
             self.product_qty = 0.0
             return False
         if (
@@ -597,6 +598,7 @@ class WizStockBarcodesRead(models.AbstractModel):
             and self.lot_id != self.guided_lot_id
             and self.option_group_id.get_option_value("lot_id", "forced")
         ):
+            self.lot_id = False
             self._set_messagge_info("more_match", _("Wrong lot"))
             return False
         if (
@@ -604,6 +606,7 @@ class WizStockBarcodesRead(models.AbstractModel):
             and self.location_id != self.guided_location_id
             and self.option_group_id.get_option_value("location_id", "forced")
         ):
+            self.location_id = False
             self.barcode = False
             self._set_messagge_info("more_match", _("Wrong location"))
             return False
