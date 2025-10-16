@@ -92,8 +92,8 @@ patch(KanbanRenderer.prototype, {
             }
         }
 
-        this.showMessageScanProductPackage =
-            this.props.list.resModel === "stock.picking";
+//        this.showMessageScanProductPackage =
+//            this.props.list.resModel === "stock.picking";
     },
 
     // ... (le reste du fichier reste identique, il n'utilise pas jQuery)
