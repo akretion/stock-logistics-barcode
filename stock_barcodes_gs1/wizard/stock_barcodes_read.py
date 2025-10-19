@@ -152,11 +152,19 @@ class WizStockBarcodesRead(models.AbstractModel):
             gs1_list = nomenclature.parse_barcode(barcode)
         if gs1_list is None:
             return super().process_barcode(barcode)
-        warning_msg_list = []
-        self.message = False
         # Empty previous packaging wnen barcode contains 30, 37, 310, 330, etc.
         if next(filter(lambda f: f["ai"][0] == "3", gs1_list), False):
             self.packaging_id = False
+        current_options = self.option_group_id.option_ids.filtered(
+            lambda op: op.step == self.step and op.to_scan
+        )
+        fields_to_scan = current_options.mapped("field_name")
+        # Wrong gs1 scan, we need a location !
+        if "location_id" in fields_to_scan or "location_dest_id" in fields_to_scan:
+            self.play_sounds(False)
+            return False
+        warning_msg_list = []
+        self.message = False
         for gs1_item in gs1_list:
             self.barcode = self._hook_process_gs1_value(gs1_item)
             ai = gs1_item["ai"]
