@@ -604,9 +604,16 @@ class WizStockBarcodesReadPicking(models.TransientModel):
             self._set_messagge_info(
                 "more_match", _("Quantities scanned are higher than necessary.")
             )
-            self.visible_force_done = True
-            self._set_focus_on_qty_input("product_qty")
+            if not self.option_group_id.barcode_guided_mode == "flexible":
+                self.visible_force_done = True
+                self._set_focus_on_qty_input("product_qty")
             return False
+        if self.option_group_id.barcode_guided_mode == "flexible" and not lines:
+            self._set_messagge_info(
+                "not_found", _("Scanned lot is not the expected lot")
+            )
+            return False
+
         move_lines_dic = {}
         context = self.env.context
         for line in lines:
