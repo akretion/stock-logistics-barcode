@@ -13,10 +13,11 @@ class StockBarcodesOptionGroup(models.Model):
         comodel_name="stock.barcodes.option", inverse_name="option_group_id", copy=True
     )
     barcode_guided_mode = fields.Selection(
-        [("guided", "Guided")],
+        [("guided", "Guided"), ("flexible", "Flexible")],
         string="Mode",
         help="When guided mode is selected, information will appear with the "
-        "movement to be processed",
+        "movement to be processed. \nWhen flexible mode is selected, user won't be "
+        "guided but he will have to scan only what is plan (same product, lot...)",
     )
     manual_entry = fields.Boolean(
         string="Manual entry",
