@@ -382,7 +382,7 @@ class WizStockBarcodesReadPicking(models.TransientModel):
         vals = {
             "picking_id": picking.id,
             "move_id": candidate_move.id,
-            "qty_done": available_qty,
+            "quantity": available_qty,
             "picked": True,
             "product_uom_id": candidate_move.product_uom.id or self.product_id.uom_id.id
             if not self.packaging_id
