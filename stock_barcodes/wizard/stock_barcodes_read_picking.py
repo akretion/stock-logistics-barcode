@@ -332,6 +332,7 @@ class WizStockBarcodesReadPicking(models.TransientModel):
                     keep_vals = {}
                 else:
                     keep_vals = self._convert_to_write(self._cache)
+                previous_moves = self.todo_line_id.stock_move_ids
                 self.fill_todo_records()
                 if self.forced_todo_key:
                     self.todo_line_id = self.pending_move_ids.filtered(
@@ -341,7 +342,10 @@ class WizStockBarcodesReadPicking(models.TransientModel):
                     self.determine_todo_action(self.todo_line_id)
                 else:
                     self.determine_todo_action()
-                self.action_show_step()
+                force_message_type = None
+                if self.todo_line_id.stock_move_ids != previous_moves:
+                    force_message_type = "success"
+                self.action_show_step(force_message_type=force_message_type)
                 if keep_vals:
                     self.update_keep_values(keep_vals)
             # Force refresh candidate pickings to show green if not pending moves

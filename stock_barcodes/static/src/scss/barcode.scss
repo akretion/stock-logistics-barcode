@@ -42,6 +42,18 @@ div.alert.barcode-info {
     }
 }
 
+div.alert.barcode-error {
+    background-color: #e02516 !important;
+}
+
+div.alert.barcode-success {
+    background-color: #16e02e !important;
+}
+
+div.alert.barcode-warning {
+    background-color: #ffd683 !important;
+}
+
 .inventory_quant_ids_with_form {
     height: 710px !important;
     @include media-breakpoint-down(sm) {
