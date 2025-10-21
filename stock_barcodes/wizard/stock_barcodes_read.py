@@ -618,6 +618,8 @@ class WizStockBarcodesRead(models.AbstractModel):
     def action_done(self):
         if not self.manual_entry and not self.product_qty and not self.is_manual_qty:
             self.product_qty = 1.0
+        # reset message_step
+        self.message_step = ""
         limit_product_qty = float(
             self.env["ir.config_parameter"]
             .sudo()
@@ -774,14 +776,20 @@ class WizStockBarcodesRead(models.AbstractModel):
         options = self.option_group_id.option_ids.filtered(
             lambda op: op.step == self.step and op.to_scan
         )
+        message = _("Scan {}").format(", ".join(options.mapped("name")))
         message_type = "info_page"
         if force_message_type:
             message_type = force_message_type
+        # set message step to keep the good color because action_show_step is called
+        # several times
         if previous_step > self.step:
-            message_type = "info"
-        self._set_messagge_info(
-            message_type, _("Scan {}").format(", ".join(options.mapped("name")))
-        )
+            self.message_step = "info"
+        if self.message_step == "done":
+            self.message_step = ""
+            message = _("Done")
+        elif self.message_step:
+            message_type = self.message_step
+        self._set_messagge_info(message_type, message)
 
     @api.onchange("package_id")
     def onchange_package_id(self):
