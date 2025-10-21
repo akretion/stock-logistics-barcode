@@ -308,6 +308,8 @@ class WizStockBarcodesReadPicking(models.TransientModel):
                 force_message_type = None
                 if self.todo_line_id.stock_move_ids != previous_moves:
                     force_message_type = "success"
+                    if not self.pending_move_ids:
+                        self.message_step = "done"
                 self.action_show_step(force_message_type=force_message_type)
                 if keep_vals:
                     self.update_keep_values(keep_vals)
