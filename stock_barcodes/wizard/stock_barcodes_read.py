@@ -762,8 +762,9 @@ class WizStockBarcodesRead(models.AbstractModel):
         return self.get_formview_action()
 
     @api.onchange("step")
-    def action_show_step(self):
+    def action_show_step(self, force_message_type=None):
         options_required = self.option_group_id.option_ids.filtered("required")
+        previous_step = self.step
         self.step = 0
         for option in options_required:
             if not getattr(self, option.field_name, False):
@@ -777,8 +778,13 @@ class WizStockBarcodesRead(models.AbstractModel):
         options = self.option_group_id.option_ids.filtered(
             lambda op: op.step == self.step and op.to_scan
         )
+        message_type = "info_page"
+        if force_message_type:
+            message_type = force_message_type
+        if previous_step > self.step:
+            message_type = "info"
         self._set_messagge_info(
-            "info_page", _("Scan {}").format(", ".join(options.mapped("name")))
+            message_type, _("Scan {}").format(", ".join(options.mapped("name")))
         )
 
     @api.onchange("package_id")

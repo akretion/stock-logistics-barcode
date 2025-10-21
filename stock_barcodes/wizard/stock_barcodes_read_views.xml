@@ -35,7 +35,44 @@
                         invisible="display_menu"
                         class="flex-fill oe_stock_barcordes_content"
                     >
-                        <field name="message_type" invisible="1" />
+                        <div name="info" class="text-center h3 mb-2">
+                            <div
+                                class="alert barcode-info text-white mb-0 d-flex"
+                                role="status"
+                            >
+                                <button
+                                    name="open_actions"
+                                    type="object"
+                                    class="ms-auto oe_kanban_action_button btn-sm"
+                                    title="Open actions"
+                                    invisible="display_menu"
+                                    data-hotkey="0"
+                                >
+                                    <i class="fa fa-chevron-left fa-2x text-white" />
+                                </button>
+                                <field
+                                    name="message"
+                                    class="mt-3 h3 text-white"
+                                    invisible="message_type != 'info_page'"
+                                />
+                                <field
+                                    name="message"
+                                    class="mt-3 h3 text-white alert barcode-success"
+                                    invisible="message_type != 'success'"
+                                />
+                                <field
+                                    name="message"
+                                    class="mt-3 h3 text-white alert barcode-warning"
+                                    invisible="message_type != 'info'"
+                                />
+                                <field
+                                    name="message"
+                                    class="mt-3 h3 text-white alert barcode-error"
+                                    invisible="message_type not in ['not_found', 'more_match']"
+                                />
+                            </div>
+                        </div>
+                        <field name="message_type" />
                         <field name="barcode" invisible="1" force_save="1" />
                         <field name="step" invisible="1" force_save="1" />
                         <field name="is_manual_qty" invisible="1" />
