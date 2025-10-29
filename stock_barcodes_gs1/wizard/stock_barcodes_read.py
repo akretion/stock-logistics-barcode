@@ -162,7 +162,9 @@ class WizStockBarcodesRead(models.AbstractModel):
         # Wrong gs1 scan, we need a location !
         if "location_id" in fields_to_scan or "location_dest_id" in fields_to_scan:
             self.play_sounds(False)
-            self._set_messagge_info("more_match", _("Barcode not location"))
+            self._set_messagge_info(
+                "more_match", _("Barcode not location"), notification=True
+            )
             return False
         warning_msg_list = []
         self.message = False
