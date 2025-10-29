@@ -171,7 +171,7 @@ class WizStockBarcodesRead(models.AbstractModel):
     def onchange_visible_force_done(self):
         self.visible_force_done = False
 
-    def _set_messagge_info(self, message_type, message):
+    def _set_messagge_info(self, message_type, message, notification=False):
         """
         Set message type and message description.
         For manual entry mode barcode is not set so is not displayed
@@ -179,9 +179,11 @@ class WizStockBarcodesRead(models.AbstractModel):
         self.message_type = message_type
         # if self.barcode and self.message_type in ["more_match", "not_found"]:
         if self.barcode:
-            self.message = _(
+            message = _(
                 "%(barcode)s (%(message)s)", barcode=self.barcode, message=message
             )
+        if self.barcode and not notification:
+            self.message = message
         else:
             if message_type in TYPE_ERROR:
                 self.manual_entry = True
@@ -541,6 +543,8 @@ class WizStockBarcodesRead(models.AbstractModel):
 
     def dummy_on_barcode_scanned(self):
         """To avoid execute operations in onchange environment"""
+        # reset message_step
+        self.message_step = ""
         self.process_barcode(self.barcode)
 
     def check_location_contidion(self):
