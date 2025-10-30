@@ -186,9 +186,16 @@ class WizStockBarcodesRead(models.AbstractModel):
             self.message = message
         else:
             if message_type in TYPE_ERROR:
-                self.manual_entry = True
+                # Making manual should be an option of the barconde scenario
+                # self.manual_entry = True
+                # self.send_bus_done(
+                #     "stock_barcodes_scan",
+                #     "stock_barcodes_edit_manual",
+                #     {"manual_entry": True},
+                # )
                 self.send_bus_done(
                     "stock_barcodes_scan",
+                    "actions_barcode_notification",
                     {
                         "type": "actions_barcode_notification",
                         "payload": {
