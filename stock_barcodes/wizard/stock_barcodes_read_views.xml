@@ -72,7 +72,7 @@
                                 />
                             </div>
                         </div>
-                        <field name="message_type" />
+                        <field name="message_type" invisible="1" />
                         <field name="barcode" invisible="1" force_save="1" />
                         <field name="step" invisible="1" force_save="1" />
                         <field name="is_manual_qty" invisible="1" />
