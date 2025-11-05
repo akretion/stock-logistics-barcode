@@ -142,12 +142,21 @@ class WizStockBarcodesReadTodo(models.TransientModel):
             ) > -1 or (
                 rec.wiz_barcode_id.option_group_id.source_pending_moves
                 == "move_line_ids"
-                and rec.line_ids
                 and (
-                    sum(rec.stock_move_ids.move_line_ids.mapped("qty_done"))
-                    >= sum(rec.stock_move_ids.mapped("product_uom_qty"))
-                    or not any(
-                        ln.barcode_scan_state == "pending" for ln in rec.line_ids
+                    (
+                        rec.line_ids
+                        and (
+                            sum(rec.stock_move_ids.move_line_ids.mapped("qty_done"))
+                            >= sum(rec.stock_move_ids.mapped("product_uom_qty"))
+                            or not any(
+                                ln.barcode_scan_state == "pending"
+                                for ln in rec.line_ids
+                            )
+                        )
+                    )
+                    or (  # ignore unreserve lines in case of backorder
+                        all(ln.picked for ln in rec.stock_move_ids.move_line_ids)
+                        and rec.wiz_barcode_id.picking_id.move_type == "direct"
                     )
                 )
             ):
