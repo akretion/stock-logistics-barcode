@@ -11,6 +11,7 @@
                 <field name="location_dest_id" />
                 <field name="location_dest_name" />
                 <field name="product_id" />
+                <field name="product_code" />
                 <field name="lot_id" />
                 <field name="uom_id" />
                 <field name="package_id" />
@@ -49,10 +50,10 @@
                                     </strong>
                                 </div>
                             </div>
-                            <div class="row">
+                            <div class="row h1">
                                 <div class="col">
                                     <strong>
-                                        <field name="product_id" />
+                                        <field name="product_code" />
                                     </strong>
                                 </div>
                             </div>
@@ -61,7 +62,7 @@
                             >
                                 <table>
                                     <tr>
-                                        <td>
+                                        <td class="h1">
                                             <span>
                                                 <span
                                                     class="fa fa-tags"
@@ -90,7 +91,7 @@
                                     </tr>
                                 </table>
                             </t>
-                            <div class="row">
+                            <div class="row h1">
                                 <div class="col-12">
                                     <span>
                                         <span class="fw-bold">
