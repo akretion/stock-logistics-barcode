@@ -988,6 +988,7 @@ class WizStockBarcodesReadPicking(models.TransientModel):
             if (
                 move.barcode_backorder_action == "pending"
                 and move.product_uom_qty > qty
+                and move.picking_id.move_type == "one"
             ):
                 vals = self._prepare_fill_record_values(move, position)
                 vals.update(
