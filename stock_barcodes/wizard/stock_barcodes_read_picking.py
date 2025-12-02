@@ -297,16 +297,23 @@ class WizStockBarcodesReadPicking(models.TransientModel):
         result = super().action_manual_entry()
         if result:
             self.action_done()
-        return result
+            return result
 
     def _prepare_move_line_values(self, candidate_move, available_qty):
         """When we've got an out picking, the logical workflow is that
         the scanned location is the location we're getting the stock
         from"""
+        if self.option_group_id.pick_in_child_location and self.product_id:
+            candidate_move_line = self.pending_move_ids.line_ids.filtered(
+                lambda x: x.product_id.id == self.product_id.id
+            )
+            location_id = candidate_move_line.location_id.id
+        else:
+            location_id = self.location_id.id
         picking = self.env.context.get("picking", self.picking_id)
         if not picking:
             raise ValidationError(
-                _("You can not add extra moves if you have " "not set a picking")
+                _("You can not add extra moves if you have not set a picking")
             )
         # If we move all package units the result package is the same
         if (
@@ -323,7 +330,7 @@ class WizStockBarcodesReadPicking(models.TransientModel):
             if not self.packaging_id
             else self.packaging_id.product_uom_id.id,
             "product_id": self.product_id.id,
-            "location_id": self.location_id.id,
+            "location_id": location_id,
             "location_dest_id": self.location_dest_id.id,
             "lot_id": self.lot_id.id,
             "lot_name": self.lot_id.name,
@@ -386,10 +393,17 @@ class WizStockBarcodesReadPicking(models.TransientModel):
         return True
 
     def _get_candidate_stock_move_lines(self, moves_todo, sml_vals):
+        if self.option_group_id.pick_in_child_location and self.product_id:
+            candidate_move_line = self.pending_move_ids.line_ids.filtered(
+                lambda x: x.product_id.id == self.product_id.id
+            )
+            location_id = candidate_move_line.location_id.id
+        else:
+            location_id = self.location_id.id
         candidate_lines = moves_todo.mapped("move_line_ids").filtered(
             lambda l: (
                 # l.picking_id == self.picking_id and
-                l.location_id == self.location_id
+                l.location_id.id == location_id
                 and l.location_dest_id == self.location_dest_id
                 and l.product_id == self.product_id
             )

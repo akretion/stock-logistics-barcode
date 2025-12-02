@@ -127,10 +127,22 @@ class WizStockBarcodesRead(models.AbstractModel):
         if not self.product_id or self.location_id.usage != "internal":
             self.qty_available = 0.0
             return
-        domain_quant = [
-            ("product_id", "=", self.product_id.id),
-            ("location_id", "=", self.location_id.id),
-        ]
+        if self.option_group_id.pick_in_child_location and self.product_id:
+            candidate_move_line = self.pending_move_ids.line_ids.filtered(
+                lambda x: x.product_id.id == self.product_id.id
+            )
+            if len(candidate_move_line) == 1:
+                domain_quant = [
+                    ("product_id", "=", self.product_id.id),
+                    ("location_id", "=", candidate_move_line.location_id.id),
+                ]
+            elif len(candidate_move_line > 0):
+                pass
+        else:
+            domain_quant = [
+                ("product_id", "=", self.product_id.id),
+                ("location_id", "=", self.location_id.id),
+            ]
         if self.lot_id:
             domain_quant.append(("lot_id", "=", self.lot_id.id))
         # if self.package_id:
@@ -214,7 +226,7 @@ class WizStockBarcodesRead(models.AbstractModel):
             self.action_product_scaned_post(product)
 
             if self.option_group_id.scan_product_one_by_one:
-                self.action_done()
+                self.action_confirm()
                 return True
 
             if (
@@ -788,10 +800,16 @@ class WizStockBarcodesRead(models.AbstractModel):
         record.write(self._convert_to_write(self._cache))
         self = record
         res = self.action_done()
-        self.invalidate_recordset()
+        # self.invalidate_recordset()
+        self.refresh_data()
         self.play_sounds(res)
         self._set_focus_on_qty_input()
         return res
+
+    def refresh_data(self):
+        self.env["bus.bus"]._sendone(
+            "barcode_reload", "stock_barcodes_refresh_data", {}
+        )
 
     def process_lot_before_done(self):
         if (

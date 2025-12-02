@@ -123,6 +123,7 @@ class StockBarcodesOptionGroup(models.Model):
         help="Update all destination of pending move and move_lines on destination update",
         string="Update destination on all operation",
     )
+    pick_in_child_location = fields.Boolean()
 
     def get_option_value(self, field_name, attribute):
         option = self.option_ids.filtered(lambda op: op.field_name == field_name)[:1]
