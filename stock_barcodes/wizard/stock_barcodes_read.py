@@ -136,7 +136,7 @@ class WizStockBarcodesRead(models.AbstractModel):
                     ("product_id", "=", self.product_id.id),
                     ("location_id", "=", candidate_move_line.location_id.id),
                 ]
-            elif len(candidate_move_line > 0):
+            elif len(candidate_move_line) > 0:
                 pass
         else:
             domain_quant = [
