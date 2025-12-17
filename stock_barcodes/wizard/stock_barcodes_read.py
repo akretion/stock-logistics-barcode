@@ -535,12 +535,13 @@ class WizStockBarcodesRead(models.AbstractModel):
     def _clean_barcode_scanned(self, barcode):
         return barcode.rstrip()
 
-    def on_barcode_scanned(self, barcode):
-        self.barcode = self._clean_barcode_scanned(barcode)
+    #    def on_barcode_scanned(self, barcode):
+    #        self.barcode = self._clean_barcode_scanned(barcode)
 
-    def dummy_on_barcode_scanned(self):
+    def dummy_on_barcode_scanned(self, barcode):
         """To avoid execute operations in onchange environment"""
         # reset message_step
+        self.barcode = self._clean_barcode_scanned(barcode)
         self.message_step = ""
         self.process_barcode(self.barcode)
 
