@@ -534,9 +534,15 @@ class WizStockBarcodesRead(models.AbstractModel):
     def on_barcode_scanned(self, barcode):
         self.barcode = self._clean_barcode_scanned(barcode)
 
-    def dummy_on_barcode_scanned(self):
+    def dummy_on_barcode_scanned(self, barcode):
         """To avoid execute operations in onchange environment"""
+        # reset message_step
+        self.barcode = barcode
+        self.message_step = ""
         self.process_barcode(self.barcode)
+
+    def dummy_refresh(self):
+        pass
 
     def check_location_contidion(self):
         if not self.location_id:
