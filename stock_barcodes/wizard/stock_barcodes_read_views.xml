@@ -361,6 +361,13 @@
                             invisible="0"
                             class="d-none"
                         />
+                        <button
+                            name="dummy_refresh"
+                            id="dummy_refresh"
+                            type="object"
+                            invisible="0"
+                            class="d-none"
+                        />
 
                         <button
                             name="action_add_scan_manual"
