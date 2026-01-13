@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <record id="view_stock_barcodes_read_picking_form" model="ir.ui.view">
         <field name="name">stock.barcodes.read.picking.form</field>
@@ -51,7 +51,8 @@
                                             context="{'wiz_barcode_id': parent.id}"
                                         >
                                             <span class="fa-stack fa-lg">
-                                                <!-- FIXME: Use fa-thumbtack fa-stack-2x on v13 with FA v5.4 -->
+                                                <!-- FIXME: Use fa-thumbtack fa-stack-2x on v13 with
+                                                FA v5.4 -->
                                                 <i
                                                     class="fa fa-thumb-tack fa-stack-1x"
                                                 />
@@ -66,12 +67,11 @@
                                         <div>
                                             <strong>
                                                 <field name="name" />
-                                                <t t-if="record.partner_id.raw_value">
-                                                    [<field
+                                                <t t-if="record.partner_id.raw_value"> [<field
                                                         name="partner_id"
                                                         invisible="context.get('hide_partner', False)"
-                                                    />]
-                                                </t>
+                                                    />
+                                                    ] </t>
                                                 <field
                                                     name="scan_count"
                                                     invisible="1"
@@ -133,12 +133,14 @@
             <field name="location_id" position="attributes">
                 <attribute
                     name="domain"
-                >[('id', 'child_of', picking_location_id), '|', ('company_id', '=', False), ('company_id', '=', company_id), ('usage', '!=', 'view')]</attribute>
+                >[('id', 'child_of', picking_location_id), '|', ('company_id', '=',
+                    False), ('company_id', '=', company_id), ('usage', '!=', 'view')]</attribute>
             </field>
             <div name="location" position="attributes">
                 <attribute
                     name="attrs"
-                >{'readonly': [('manual_entry', '=', False)], 'invisible': [('picking_type_code', '=', 'incoming')]}</attribute>
+                >{'readonly': [('manual_entry', '=', False)], 'invisible':
+                    [('picking_type_code', '=', 'incoming')]}</attribute>
             </div>
             <div name="location" position="after">
                 <div attrs="{'invisible': [('picking_type_code', '=', 'outgoing')]}">
@@ -335,14 +337,12 @@
                                                 </div>
                                             </div>
                                             <div class="row">
-                                                <div class="col-4">
-                                                    Lot: <field name="lot_id" />
+                                                <div class="col-4"> Lot: <field name="lot_id" />
                                                 </div>
                                                 <t
                                                     t-if="record.result_package_id.raw_value"
                                                 >
-                                                    <div class="col-4">
-                                                        Package: <field
+                                                    <div class="col-4"> Package: <field
                                                             name="result_package_id"
                                                         />
                                                     </div>
@@ -393,7 +393,7 @@
         <field name="name">Barcodes Read</field>
         <field name="view_mode">form</field>
         <field name="context">{"control_panel_hidden": True,
-                               "form_view_initial_mode": "edit"}
+            "form_view_initial_mode": "edit"}
         </field>
         <field name="view_id" ref="view_stock_barcodes_read_picking_form" />
         <field name="target">current</field>
@@ -405,7 +405,7 @@
         <field
             name="context"
         >{"control_panel_hidden": True, "scanning_picking_type": True,
-                               "form_view_initial_mode": "edit"}
+            "form_view_initial_mode": "edit"}
         </field>
         <field name="view_id" ref="view_stock_barcodes_read_picking_form" />
         <field name="target">current</field>
