@@ -225,7 +225,7 @@ class WizStockBarcodesRead(models.AbstractModel):
 
             if self.option_group_id.scan_product_one_by_one:
                 self.action_confirm()
-                return True
+                return "no_confirm"
 
             if (
                 self.option_group_id.fill_fields_from_lot
