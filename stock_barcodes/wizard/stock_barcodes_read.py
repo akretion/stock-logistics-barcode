@@ -131,7 +131,7 @@ class WizStockBarcodesRead(models.AbstractModel):
             candidate_move_line = self.pending_move_ids.line_ids.filtered(
                 lambda x: x.product_id.id == self.product_id.id
             )
-            if len(candidate_move_line) > 1:
+            if len(candidate_move_line) > 0:
                 domain_quant = [
                     ("product_id", "=", self.product_id.id),
                     ("location_id", "in", [candidate_move_line.location_id.id]),
