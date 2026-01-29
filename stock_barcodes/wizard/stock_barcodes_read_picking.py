@@ -83,7 +83,7 @@ class WizStockBarcodesReadPicking(models.TransientModel):
     forced_todo_key = fields.Char()
     qty_available = fields.Float(compute="_compute_qty_available")
     partner_id = fields.Many2one("res.partner", related="picking_id.partner_id")
-    partner_name = fields.Char(related="partner_id.name")
+    partner_name = fields.Char(related="partner_id.display_name")
     enable_add_product = fields.Boolean(compute="_compute_enable_add_product")
 
     def action_show_detailed_operations(self):
