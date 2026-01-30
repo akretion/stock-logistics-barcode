@@ -109,13 +109,13 @@ msgstr "Sequence"
 #: code:addons/product_multi_barcode/models/product_barcode.py:0
 #, python-format
 msgid ""
-"The Barcode \"%(barcode_name)s\" already exists for "
-"\"%(product_name)s\" in the company %(company_name)s. The reference of the "
-"product is %(product_ref)s and the product is %(product_status)s."
+"The Barcode \"%(barcode_name)s\" already exists for %(product_type)s "
+"\"%(product_name)s\" in the company %(company_name)s. The product is "
+"%(product_status)s."
 msgstr ""
-"Le code barre \"%(barcode_name)s\" existe pour le produit "
-"\"%(product_name)s\" dans la société %(company_name)s. La référence du "
-"produit est %(product_ref)s et le produit est %(product_status)s"
+"Le code barre \"%(barcode_name)s\" existe déjà pour le produit %(product_type)s "
+"\"%(product_name)s\" dans la société %(company_name)s. Le produit est "
+"%(product_status)s."
 
 #. module: product_multi_barcode
 #: code:addons/product_multi_barcode/models/product_barcode.py:0
