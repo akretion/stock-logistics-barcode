@@ -73,15 +73,13 @@ class ProductBarcode(models.Model):
                     _(
                         'The Barcode "%(barcode_name)s" already exists for '
                         '%(product_type)s "%(product_name)s" in the company %(company_name)s. '
-                        "The reference of the product is %(product_ref)s "
-                        "and the product is %(product_status)s."
+                        "The product is %(product_status)s."
                     )
                     % {
                         "barcode_name": record.name,
                         "product_type": product_type,
                         "product_name": item.name,
                         "company_name": barcodes.company_id.name,
-                        "product_ref": item.default_code,
                         "product_status": _("active") if item.active else _("archived"),
                     }
                 )
