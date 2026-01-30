@@ -64,14 +64,24 @@ class ProductBarcode(models.Model):
                 # note: if you do not want to share the barcode between company
                 # you just need to add a custom ir.rule
                 product = barcodes[0].sudo().product_id
+                product_tmpl_id = barcodes[0].product_tmpl_id
+
+                item = product if product else product_tmpl_id
+                product_type = _("product") if product else _("product template")
+
                 raise UserError(
                     _(
                         'The Barcode "%(barcode_name)s" already exists for '
-                        'product "%(product_name)s" in the company %(company_name)s'
+                        '%(product_type)s "%(product_name)s" in the company %(company_name)s. '
+                        "The reference of the product is %(product_ref)s "
+                        "and the product is %(product_status)s."
                     )
-                    % dict(
-                        barcode_name=record.name,
-                        product_name=product.name,
-                        company_name=product.company_id.name,
-                    )
+                    % {
+                        "barcode_name": record.name,
+                        "product_type": product_type,
+                        "product_name": item.name,
+                        "company_name": barcodes.company_id.name,
+                        "product_ref": item.default_code,
+                        "product_status": _("active") if item.active else _("archived"),
+                    }
                 )
