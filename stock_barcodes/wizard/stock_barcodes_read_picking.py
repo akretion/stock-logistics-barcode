@@ -783,7 +783,7 @@ class WizStockBarcodesReadPicking(models.TransientModel):
         raise ValidationError(_("No pending lines for this product"))
 
     def action_put_in_pack(self):
-        self.picking_id.action_put_in_pack()
+        return self.picking_id.action_put_in_pack()
 
     def action_clean_values(self):
         res = super().action_clean_values()
