@@ -127,28 +127,25 @@ class WizStockBarcodesRead(models.AbstractModel):
         if not self.product_id or self.location_id.usage != "internal":
             self.qty_available = 0.0
             return
+        domain_quant = [
+            ("product_id", "=", self.product_id.id),
+            ("location_id", "=", self.location_id.id),
+        ]
         if self.option_group_id.pick_in_child_location and self.product_id:
             candidate_move_line = self.pending_move_ids.line_ids.filtered(
                 lambda x: x.product_id.id == self.product_id.id
             )
-            if len(candidate_move_line) > 0:
+            if candidate_move_line:
                 domain_quant = [
                     ("product_id", "=", self.product_id.id),
                     ("location_id", "in", [candidate_move_line.location_id.id]),
                 ]
-        else:
-            domain_quant = [
-                ("product_id", "=", self.product_id.id),
-                ("location_id", "=", self.location_id.id),
-            ]
         if self.lot_id:
             domain_quant.append(("lot_id", "=", self.lot_id.id))
-        # if self.package_id:
-        #     domain_quant.append(('package_id', '=', self.package_id.id))
         groups = self.env["stock.quant"].read_group(
             domain_quant, ["quantity"], [], orderby="id"
         )
-        self.qty_available = groups[0]["quantity"]
+        self.qty_available = groups[0]["quantity"] or 0.0
 
     @api.depends("product_id")
     def _compute_display_assign_serial(self):
